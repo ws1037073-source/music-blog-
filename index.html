@@ -3,218 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MUSIC.CZ | THE GLOBAL ARCHIVE ENGINE</title>
+    <title>MUSIC.CZ | ADS & CONTROL</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4463972339210902" crossorigin="anonymous"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Outfit:wght@100;300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Outfit:wght@300;600;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg: #000000;
-            --sidebar-w: 380px;
-            --accent: #00ffcc; /* Cyber Mint */
-            --accent-dim: rgba(0, 255, 204, 0.15);
-            --border: rgba(255, 255, 255, 0.05);
-            --surface: #0a0a0a;
+            --bg: #050505;
+            --accent: #ff4d00; /* Agresivní oranžová pro vysoký proklik */
+            --panel: #0f0f0f;
+            --border: #1a1a1a;
             --text: #ffffff;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        /* --- CORE ARCHITECTURE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Outfit', sans-serif;
+        body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; display: flex; height: 100vh; overflow: hidden; }
+
+        /* --- ADSENSE TOP LEADERBOARD --- */
+        #top-ads {
+            position: fixed;
+            top: 0; left: 300px; right: 0;
+            height: 90px;
+            background: #000;
+            border-bottom: 1px solid var(--border);
             display: flex;
-            height: 100vh;
-            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
         }
 
-        /* --- INTERAKTIVNÍ SIDEBAR (OVALÁDÁNÍ) --- */
-        #master-sidebar {
-            width: var(--sidebar-w);
+        /* --- SIDEBAR (OVLÁDACÍ PANEL) --- */
+        aside {
+            width: 300px;
             background: #000;
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            padding: 60px 0;
+            flex-shrink: 0;
+        }
+
+        .logo-box { padding: 30px; border-bottom: 1px solid var(--border); }
+        .logo { font-family: 'Syncopate', sans-serif; font-size: 1.4rem; color: var(--accent); }
+
+        .nav { flex-grow: 1; padding: 20px 0; }
+        .nav-item {
+            padding: 15px 30px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: #555;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-item:hover { background: #0a0a0a; color: #fff; }
+        .nav-item.active { color: var(--accent); background: #111; border-right: 3px solid var(--accent); }
+
+        /* --- HLAVNÍ KONZOLE --- */
+        main { flex-grow: 1; padding: 120px 40px 120px 40px; overflow-y: auto; display: grid; grid-template-columns: 1fr 300px; gap: 30px; }
+
+        .console-box { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 25px; position: relative; overflow: hidden; }
+        .box-label { font-family: var(--font-mono); font-size: 0.6rem; color: var(--accent); margin-bottom: 15px; text-transform: uppercase; }
+
+        /* VIZUALIZÉR */
+        .viz-container { display: flex; align-items: flex-end; gap: 3px; height: 100px; margin-top: 20px; }
+        .bar { flex: 1; background: var(--accent); min-height: 5px; transition: height 0.15s ease; }
+
+        /* LIST PÍSNÍ (INTERAKTIVNÍ) */
+        .track-list { list-style: none; }
+        .track {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .track:hover { background: #151515; }
+        .track span { color: var(--accent); font-family: var(--font-mono); font-size: 0.7rem; }
+
+        /* ADS COLUMN */
+        .ads-tower { display: flex; flex-direction: column; gap: 20px; }
+        .ad-slot { background: #000; border: 1px solid #222; min-height: 250px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #333; }
+
+        /* PLAYER BAR */
+        footer {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 80px;
+            background: #000;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
             z-index: 1000;
         }
 
-        .brand-zone { padding: 0 50px; margin-bottom: 80px; }
-        .logo-main { font-family: 'Syncopate', sans-serif; font-size: 2.2rem; color: var(--accent); letter-spacing: -3px; }
-        .status-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; margin-right: 10px; box-shadow: 0 0 10px var(--accent); }
+        .play-btn { width: 45px; height: 45px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #000; font-weight: 900; margin-right: 20px; }
 
-        .nav-list { list-style: none; flex-grow: 1; }
-        .nav-btn {
-            padding: 22px 50px;
-            cursor: pointer;
-            color: #555;
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.4s;
-            border-left: 0 solid var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.02); padding-left: 60px; }
-        .nav-btn.active { color: var(--accent); background: var(--accent-dim); border-left-width: 6px; padding-left: 60px; }
-
-        /* --- VIEWPORT ENGINE --- */
-        #content-engine {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 100px;
-            position: relative;
-            background: radial-gradient(circle at 100% 0%, #080808 0%, #000 70%);
-        }
-
-        .view-section { display: none; opacity: 0; transform: translateY(50px); transition: 1s cubic-bezier(0.16, 1, 0.3, 1); }
-        .view-section.active { display: block; opacity: 1; transform: translateY(0); }
-
-        /* --- TYPOGRAFIE & KOMPONENTY --- */
-        h1 { font-family: 'Syncopate', sans-serif; font-size: 7rem; line-height: 0.8; margin-bottom: 60px; letter-spacing: -8px; }
-        .data-stream { column-count: 3; column-gap: 50px; color: #777; font-size: 0.95rem; line-height: 2; text-align: justify; }
-        .data-stream strong { color: var(--accent); }
-
-        /* AD BOXES */
-        .premium-ad-slot {
-            margin: 80px 0;
-            background: #050505;
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 40px;
-            text-align: center;
-        }
-
-        /* DYNAMICKÝ PŘEHRÁVAČ */
-        #dock-player {
-            position: fixed;
-            bottom: 40px;
-            left: calc(var(--sidebar-w) + 40px);
-            right: 40px;
-            height: 110px;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(50px);
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            padding: 0 50px;
-            justify-content: space-between;
-        }
     </style>
 </head>
 <body>
 
-    <aside id="master-sidebar">
-        <div class="brand-zone">
-            <div class="logo-main">MUSIC.CZ</div>
-            <p style="font-size: 0.6rem; opacity: 0.4; margin-top: 10px;"><span class="status-dot"></span>SYSTEM ACTIVE [ca-pub-4463972339210902]</p>
+    <aside>
+        <div class="logo-box">
+            <div class="logo">MUSIC.CZ</div>
         </div>
-
-        <nav class="nav-list">
-            <div class="nav-btn active" onclick="switchUI('home', this)">01_Dashboard</div>
-            <div class="nav-btn" onclick="switchUI('archive', this)">02_Archive_X</div>
-            <div class="nav-btn" onclick="switchUI('tech', this)">03_Hardware_Specs</div>
-            <div class="nav-btn" onclick="switchUI('manifesto', this)">04_The_Manifesto</div>
-        </nav>
-
-        <div style="padding: 40px; border-top: 1px solid var(--border);">
-            <div style="font-size: 0.7rem; color: #444; margin-bottom: 10px;">ADSENSE_SIDEBAR_v1</div>
-            </div>
+        <div class="nav">
+            <div class="nav-item active" onclick="route('studio')">01 ENGINE_STUDIO <span>[LIVE]</span></div>
+            <div class="nav-item" onclick="route('library')">02 MUSIC_DATABASE <span>[DBX]</span></div>
+            <div class="nav-item" onclick="route('revenue')">03 AD_MANAGEMENT <span>[$$$]</span></div>
+            <div class="nav-item" onclick="route('settings')">04 SYSTEM_CONFIG</div>
+        </div>
+        <div class="ad-slot" style="margin: 20px; min-height: 200px;">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4463972339210902" data-ad-slot="SIDEBAR" data-ad-format="auto"></ins>
+        </div>
     </aside>
 
-    <main id="content-engine">
-        
-        <section id="home" class="view-section active">
-            <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 20px;">> ACCESS_GRANTED // 2026_CORE</div>
-            <h1>THE<br>QUANTUM<br>SOUND</h1>
-            
-            <div class="premium-ad-slot">
-                <p style="font-size: 10px; letter-spacing: 5px; opacity: 0.3; margin-bottom: 20px;">SPONSORED_DATA_STREAM</p>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-4463972339210902"
-                     data-ad-slot="YOUR_AD_SLOT"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-
-            <div class="data-stream" id="stream-alpha">
-                </div>
-        </section>
-
-        <section id="archive" class="view-section">
-            <h1>ARCHIVE</h1>
-            <div class="data-stream" id="stream-beta">
-                </div>
-        </section>
-
-        <section id="manifesto" class="view-section">
-            <h1>NOISE<br>RULES</h1>
-            <div class="data-stream" id="stream-gamma">
-                </div>
-        </section>
-
-    </main>
-
-    <div id="dock-player">
-        <div style="display: flex; align-items: center; gap: 30px;">
-            <div style="width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; cursor: pointer;">▶</div>
-            <div>
-                <div style="font-size: 1.2rem; font-weight: 800;">NEURAL_NETWORK_RADIO</div>
-                <div style="color: var(--accent); font-family: var(--font-mono); font-size: 0.7rem;">STREAMING FROM: MUSIC.CZ_NODE_01</div>
-            </div>
-        </div>
-        <div style="width: 40%; height: 2px; background: #222; border-radius: 10px; position: relative;">
-            <div style="width: 75%; height: 100%; background: var(--accent); position: absolute; box-shadow: 0 0 15px var(--accent);"></div>
-        </div>
+    <div id="top-ads">
+        <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4463972339210902" data-ad-slot="LEADERBOARD"></ins>
     </div>
 
+    <main>
+        <section id="studio-view" class="content-view">
+            <div class="console-box" style="margin-bottom: 30px;">
+                <p class="box-label">Live Audio Spectrum</p>
+                <div class="viz-container" id="viz">
+                    </div>
+            </div>
+
+            <div class="console-box">
+                <p class="box-label">Interaction Terminal</p>
+                <div class="track-list" id="tracks">
+                    </div>
+            </div>
+        </section>
+
+        <section class="ads-tower">
+            <div class="console-box ad-slot">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4463972339210902" data-ad-slot="RECTANGLE1" data-ad-format="rectangle"></ins>
+            </div>
+            <div class="console-box ad-slot">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4463972339210902" data-ad-slot="RECTANGLE2" data-ad-format="rectangle"></ins>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="play-btn" id="masterPlay">▶</div>
+        <div style="flex-grow: 1; margin-right: 40px;">
+            <div style="font-size: 0.8rem; margin-bottom: 5px; font-family: var(--font-mono);">NOW_PLAYING: <span id="currentTrack" style="color:var(--accent)">System_Idle.mp3</span></div>
+            <div style="width: 100%; height: 3px; background: #222; position: relative;">
+                <div id="progress" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.1s;"></div>
+            </div>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 0.7rem; color: #555;">CTRL_USER: ca-pub-4463972339210902</div>
+    </footer>
+
     <script>
-        // --- DATA GENERATOR (DOSAŽENÍ 100 000+ ZNAKŮ) ---
-        const dictionary = ["akustika", "synapsis", "algoritmus", "basová linka", "produkční proces", "digitální éra", "analogová syntéza", "hudební scéna", "revoluce", "harmonický", "frekvenční spektrum", "mastering", "undergroundová kultura", "vizionář", "zvukový design", "kreativita", "manifest", "technologický progres"];
+        // --- MUSIC DATABASE (INTERAKTIVNÍ KÓD) ---
+        const songs = [
+            {id: "01", title: "Quantum Bass", artist: "NeuroLink", dur: "3:45"},
+            {id: "02", title: "Digital Rain", artist: "CyberDyne", dur: "4:12"},
+            {id: "03", title: "Silicon Soul", artist: "SynthWave", dur: "5:01"},
+            {id: "04", title: "Neural Drift", artist: "AI_Core", dur: "3:20"},
+            {id: "05", title: "Ohmic Rhythm", artist: "Volt", dur: "4:44"},
+            {id: "06", title: "Packet Loss", artist: "Glitch", dur: "2:58"}
+        ];
 
-        function fillData(elementId, count) {
-            let container = document.getElementById(elementId);
-            let content = "";
-            for (let i = 0; i < count; i++) {
-                let p = "<strong>Sektor_" + i + ":</strong> ";
-                for (let j = 0; j < 100; j++) {
-                    p += dictionary[Math.floor(Math.random() * dictionary.length)] + " ";
-                    if (j % 8 === 0) p += "v kontextu moderního portálu music.cz a jeho digitální budoucnosti. ";
-                }
-                content += "<p style='margin-bottom:30px'>" + p + "</p>";
+        // --- INICIALIZACE VIZUALIZÉRU ---
+        const viz = document.getElementById('viz');
+        for(let i=0; i<40; i++) {
+            let bar = document.createElement('div');
+            bar.className = 'bar';
+            viz.appendChild(bar);
+        }
+
+        function animateViz() {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                let h = Math.random() * 95 + 5;
+                bar.style.height = h + '%';
+            });
+        }
+
+        // --- LOGIKA PŘEHRÁVAČE ---
+        const trackList = document.getElementById('tracks');
+        let playing = false;
+        let progressInterval;
+
+        songs.forEach(s => {
+            let item = document.createElement('div');
+            item.className = 'track';
+            item.innerHTML = `<div>${s.title} - ${s.artist}</div> <span>${s.dur}</span>`;
+            item.onclick = () => {
+                document.getElementById('currentTrack').innerText = s.title + ".wav";
+                resetProgress();
+                startProgress();
+            };
+            trackList.appendChild(item);
+        });
+
+        document.getElementById('masterPlay').onclick = function() {
+            playing = !playing;
+            this.innerText = playing ? '⏸' : '▶';
+            if(playing) {
+                progressInterval = setInterval(animateViz, 150);
+                startProgress();
+            } else {
+                clearInterval(progressInterval);
+                clearInterval(progTimer);
             }
-            container.innerHTML = content;
+        };
+
+        let prog = 0;
+        let progTimer;
+        function startProgress() {
+            clearInterval(progTimer);
+            progTimer = setInterval(() => {
+                if(prog < 100) {
+                    prog += 0.5;
+                    document.getElementById('progress').style.width = prog + '%';
+                }
+            }, 1000);
         }
 
-        // --- NAVIGATION ENGINE ---
-        function switchUI(sectionId, btn) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById(sectionId).classList.add('active');
-            btn.classList.add('active');
-            document.getElementById('content-engine').scrollTop = 0;
+        function resetProgress() { prog = 0; document.getElementById('progress').style.width = '0%'; }
+
+        // --- ROUTING SYSTEM ---
+        function route(v) {
+            console.log("System Routing to: " + v);
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
-        // --- INITIALIZATION ---
         window.onload = () => {
-            // Generujeme masivní textový obsah pro SEO a rozsah
-            fillData('stream-alpha', 40);
-            fillData('stream-beta', 80);
-            fillData('stream-gamma', 60);
-            
-            console.log("MUSIC.CZ SYSTEM ONLINE // AD_ID: ca-pub-4463972339210902");
             (adsbygoogle = window.adsbygoogle || []).push({});
+            console.log("ENGINE_READY: ca-pub-4463972339210902");
         };
     </script>
 </body>
