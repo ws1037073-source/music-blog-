@@ -3,249 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MUSIC.CZ | ADS & CONTROL</title>
+    <title>MUSIC.CZ | TOTAL ENGINE & ARCHIVE</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4463972339210902" crossorigin="anonymous"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Outfit:wght@300;600;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Outfit:wght@200;400;700;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg: #050505;
-            --accent: #ff4d00; /* Agresivní oranžová pro vysoký proklik */
-            --panel: #0f0f0f;
+            --bg: #000000;
+            --sidebar-w: 320px;
+            --accent: #ff00ff; /* Cyber Magenta */
+            --panel: #0a0a0a;
             --border: #1a1a1a;
-            --text: #ffffff;
-            --font-mono: 'JetBrains Mono', monospace;
+            --text-p: #ffffff;
+            --text-s: #666666;
+            --font-mono: 'Fira Code', monospace;
         }
 
+        /* --- ZÁKLADNÍ ARCHITEKTURA --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; display: flex; height: 100vh; overflow: hidden; }
-
-        /* --- ADSENSE TOP LEADERBOARD --- */
-        #top-ads {
-            position: fixed;
-            top: 0; left: 300px; right: 0;
-            height: 90px;
-            background: #000;
-            border-bottom: 1px solid var(--border);
+        body {
+            background-color: var(--bg);
+            color: var(--text-p);
+            font-family: 'Outfit', sans-serif;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* --- SIDEBAR (OVLÁDACÍ PANEL) --- */
-        aside {
-            width: 300px;
+        /* --- SIDEBAR: OVLÁDACÍ CENTRUM --- */
+        #sidebar {
+            width: var(--sidebar-w);
+            height: 100vh;
             background: #000;
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .logo-box { padding: 30px; border-bottom: 1px solid var(--border); }
-        .logo { font-family: 'Syncopate', sans-serif; font-size: 1.4rem; color: var(--accent); }
-
-        .nav { flex-grow: 1; padding: 20px 0; }
-        .nav-item {
-            padding: 15px 30px;
-            cursor: pointer;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: #555;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .nav-item:hover { background: #0a0a0a; color: #fff; }
-        .nav-item.active { color: var(--accent); background: #111; border-right: 3px solid var(--accent); }
-
-        /* --- HLAVNÍ KONZOLE --- */
-        main { flex-grow: 1; padding: 120px 40px 120px 40px; overflow-y: auto; display: grid; grid-template-columns: 1fr 300px; gap: 30px; }
-
-        .console-box { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 25px; position: relative; overflow: hidden; }
-        .box-label { font-family: var(--font-mono); font-size: 0.6rem; color: var(--accent); margin-bottom: 15px; text-transform: uppercase; }
-
-        /* VIZUALIZÉR */
-        .viz-container { display: flex; align-items: flex-end; gap: 3px; height: 100px; margin-top: 20px; }
-        .bar { flex: 1; background: var(--accent); min-height: 5px; transition: height 0.15s ease; }
-
-        /* LIST PÍSNÍ (INTERAKTIVNÍ) */
-        .track-list { list-style: none; }
-        .track {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .track:hover { background: #151515; }
-        .track span { color: var(--accent); font-family: var(--font-mono); font-size: 0.7rem; }
-
-        /* ADS COLUMN */
-        .ads-tower { display: flex; flex-direction: column; gap: 20px; }
-        .ad-slot { background: #000; border: 1px solid #222; min-height: 250px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #333; }
-
-        /* PLAYER BAR */
-        footer {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: 80px;
-            background: #000;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
             z-index: 1000;
         }
 
-        .play-btn { width: 45px; height: 45px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #000; font-weight: 900; margin-right: 20px; }
+        .logo-container { padding: 40px; border-bottom: 1px solid var(--border); }
+        .logo-main { font-family: 'Syncopate', sans-serif; font-size: 1.6rem; color: var(--accent); }
 
+        .nav-engine { flex-grow: 1; padding: 30px 0; }
+        .nav-link {
+            padding: 18px 40px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-s);
+            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--accent); background: rgba(255,0,255,0.05); }
+        .nav-link.active { border-right: 4px solid var(--accent); }
+
+        /* --- VIEWPORT: OBSAH A FUNKCE --- */
+        #main-view {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        .content-section { display: none; padding: 60px; animation: fadeIn 0.5s ease-out; }
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- TEXTOVÉ KOMPONENTY --- */
+        h1 { font-family: 'Syncopate', sans-serif; font-size: 5rem; line-height: 0.9; margin-bottom: 40px; }
+        .article-block { column-count: 2; column-gap: 50px; line-height: 1.8; color: #aaa; text-align: justify; margin-bottom: 50px; }
+        .article-block strong { color: #fff; }
+
+        /* --- REKLAMNÍ GRID --- */
+        .ad-row { width: 100%; padding: 20px 60px; background: #050505; border-bottom: 1px solid var(--border); text-align: center; }
+        .ad-sidebar-box { margin: 20px; border: 1px solid var(--border); padding: 15px; text-align: center; font-size: 0.6rem; color: #333; }
+
+        /* --- AUDIO ENGINE UI --- */
+        .viz-box { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 40px; }
+        .visualizer { display: flex; align-items: flex-end; gap: 3px; height: 100px; }
+        .v-bar { flex: 1; background: var(--accent); height: 2px; }
+
+        .playlist-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        .playlist-table tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
+        .playlist-table tr:hover { background: rgba(255,255,255,0.02); }
+        .playlist-table td { padding: 15px; font-size: 0.9rem; }
+        .playlist-table td.num { font-family: var(--font-mono); color: var(--accent); width: 50px; }
+
+        /* --- FIXNÍ DOCK PŘEHRÁVAČE --- */
+        #player-dock {
+            position: fixed;
+            bottom: 20px; left: calc(var(--sidebar-w) + 20px); right: 20px;
+            height: 90px;
+            background: rgba(10,10,10,0.9);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            border-radius: 45px;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 2000;
+        }
+
+        .play-toggle { width: 50px; height: 50px; border-radius: 50%; background: var(--accent); color: #000; display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: 900; margin-right: 30px; }
     </style>
 </head>
 <body>
 
-    <aside>
-        <div class="logo-box">
-            <div class="logo">MUSIC.CZ</div>
+    <aside id="sidebar">
+        <div class="logo-container">
+            <div class="logo-main">MUSIC.CZ</div>
+            <p style="font-size: 0.6rem; color: #444; margin-top: 10px;">CORE_v6.0 // ca-pub-4463972339210902</p>
         </div>
-        <div class="nav">
-            <div class="nav-item active" onclick="route('studio')">01 ENGINE_STUDIO <span>[LIVE]</span></div>
-            <div class="nav-item" onclick="route('library')">02 MUSIC_DATABASE <span>[DBX]</span></div>
-            <div class="nav-item" onclick="route('revenue')">03 AD_MANAGEMENT <span>[$$$]</span></div>
-            <div class="nav-item" onclick="route('settings')">04 SYSTEM_CONFIG</div>
-        </div>
-        <div class="ad-slot" style="margin: 20px; min-height: 200px;">
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4463972339210902" data-ad-slot="SIDEBAR" data-ad-format="auto"></ins>
+
+        <nav class="nav-engine">
+            <div class="nav-link active" onclick="showSection('engine', this)">01_STUDIO_ENGINE<span>[LIVE]</span></div>
+            <div class="nav-link" onclick="showSection('history', this)">02_MUSIC_HISTORY<span>[DB]</span></div>
+            <div class="nav-link" onclick="showSection('tech', this)">03_AUDIO_PHYSICS<span>[DOCS]</span></div>
+            <div class="nav-link" onclick="showSection('revenue', this)">04_REVENUE_STATS<span>[$]</span></div>
+        </nav>
+
+        <div class="ad-sidebar-box">
+            <p style="margin-bottom: 10px;">VERTICAL_ADS_UNIT</p>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4463972339210902" data-ad-slot="VERTICAL_1" data-ad-format="auto"></ins>
         </div>
     </aside>
 
-    <div id="top-ads">
-        <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4463972339210902" data-ad-slot="LEADERBOARD"></ins>
-    </div>
+    <main id="main-view">
+        
+        <div class="ad-row">
+            <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4463972339210902" data-ad-slot="LEADER_TOP"></ins>
+        </div>
 
-    <main>
-        <section id="studio-view" class="content-view">
-            <div class="console-box" style="margin-bottom: 30px;">
-                <p class="box-label">Live Audio Spectrum</p>
-                <div class="viz-container" id="viz">
-                    </div>
+        <section id="engine" class="content-section active">
+            <h1>SONIC<br>ENGINE</h1>
+            
+            <div class="viz-box">
+                <p style="font-family: var(--font-mono); font-size: 0.6rem; color: var(--accent); margin-bottom: 20px;">REALTIME_FREQUENCY_ANALYSIS</p>
+                <div class="visualizer" id="visualizer"></div>
             </div>
 
-            <div class="console-box">
-                <p class="box-label">Interaction Terminal</p>
-                <div class="track-list" id="tracks">
-                    </div>
+            <div class="article-block">
+                <strong>Interaktivní rozhraní Music.cz</strong> představuje revoluci v tom, jak konzumujeme digitální zvuk. Náš systém není pouhým webem, ale plnohodnotným audio procesorem běžícím přímo ve vašem prohlížeči. Díky technologii HTML5 Audio API a CSS3 Gridu dokážeme vykreslovat zvukové vlny v reálném čase, zatímco vy procházíte naši rozsáhlou databázi. Naším cílem je propojit vizuální zážitek s technickou precizností. Každá stopa v naší knihovně je opatřena metadata tagy, které umožňují okamžitý indexing. Tento přístup zvyšuje hodnotu domény <strong>music.cz</strong> a vytváří prémiové prostředí pro inzerenty i fanoušky.
+            </div>
+
+            <table class="playlist-table" id="playlist">
+                </table>
+        </section>
+
+        <section id="history" class="content-section">
+            <h1>AUDIO<br>HISTORY</h1>
+            <div class="article-block">
+                <strong>Zrození zvuku a jeho digitální transformace</strong>. Historie hudby je historií lidské inovace. Od prvních mechanických fonografů Thomase Edisona až po současné cloudové streamovací služby, hudba vždy tlačila technologie na jejich hranice. Na portálu Music.cz mapujeme tento vývoj s důrazem na českou stopu v globálním kontextu. <br><br>
+                V padesátých letech 20. století přišel zlom v podobě magnetofonových pásků, které umožnily multitrack nahrávání. To dalo vzniknout legendárním albům, která definovala moderní pop-kulturu. V osmdesátých letech pak digitální revoluce v podobě formátu CD navždy změnila dynamický rozsah nahrávek. Dnes se nacházíme v éře algoritmické kurace, kde umělá inteligence pomáhá skladatelům hledat nové harmonie. Music.cz je vaším průvodcem touto fascinující cestou, kde každý akord má svůj příběh a každá frekvence svůj význam.
+            </div>
+            <div class="ad-row" style="background: none; border: 1px solid var(--border); border-radius: 20px; margin-bottom: 40px;">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4463972339210902" data-ad-slot="RECT_MID" data-ad-format="auto"></ins>
+            </div>
+            <div class="article-block">
+                Proč se vracíme k vinylu? Analogový zvuk má v sobě nedokonalost, kterou lidské ucho vnímá jako "teplo". V digitální éře nuly a jedničky je tato organická textura vzácností. Na Music.cz analyzujeme audiofilské trendy a pomáháme vám vybrat to nejlepší vybavení pro váš poslechový koutek. Od lampových zesilovačů po nejmodernější bezztrátové DAC převodníky. Kvalita zvuku je pro nás prioritou číslo jedna.
             </div>
         </section>
 
-        <section class="ads-tower">
-            <div class="console-box ad-slot">
-                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4463972339210902" data-ad-slot="RECTANGLE1" data-ad-format="rectangle"></ins>
-            </div>
-            <div class="console-box ad-slot">
-                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4463972339210902" data-ad-slot="RECTANGLE2" data-ad-format="rectangle"></ins>
+        <section id="tech" class="content-section">
+            <h1>SOUND<br>PHYSICS</h1>
+            <div class="article-block">
+                <strong>Fyzika zvuku: Jak slyšíme barvy?</strong> Zvuk je vlnění tlaku vzduchu. Ale pro nás je to emoce. Technicky vzato řešíme frekvenční odezvu od 20 Hz do 20 kHz. Naše "Studio Engine" sekce pracuje s těmito daty, aby vám vizualizovala energii každé skladby. Rezonance, interference a dozvuk jsou parametry, které definují prostor, ve kterém se hudba odehrává. <br><br>
+                V této sekci najdete technické manuály k modernímu nahrávání. Jak funguje komprese dynamiky? Proč je důležitý dithering při exportu masteru? Music.cz není jen pro posluchače, ale i pro tvůrce. Chceme vzdělávat novou generaci producentů, kteří budou tvořit zvuk zítřka. Používáme moderní nástroje k vysvětlení složitých konceptů jako je fázová koherence nebo spektrální editace. Zvuk je věda, která zní jako magie.
             </div>
         </section>
+
     </main>
 
-    <footer>
-        <div class="play-btn" id="masterPlay">▶</div>
-        <div style="flex-grow: 1; margin-right: 40px;">
-            <div style="font-size: 0.8rem; margin-bottom: 5px; font-family: var(--font-mono);">NOW_PLAYING: <span id="currentTrack" style="color:var(--accent)">System_Idle.mp3</span></div>
-            <div style="width: 100%; height: 3px; background: #222; position: relative;">
-                <div id="progress" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.1s;"></div>
+    <audio id="audio-node"></audio>
+
+    <div id="player-dock">
+        <div class="play-toggle" id="masterPlay">▶</div>
+        <div style="flex-grow: 1;">
+            <div id="trackInfo" style="font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 8px;">ZVOLTE_SKLADBU.RAW</div>
+            <div style="width: 100%; height: 2px; background: #222; position: relative;">
+                <div id="progBar" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.1s;"></div>
             </div>
         </div>
-        <div style="font-family: var(--font-mono); font-size: 0.7rem; color: #555;">CTRL_USER: ca-pub-4463972339210902</div>
-    </footer>
+        <div style="margin-left: 40px; font-family: var(--font-mono); font-size: 0.7rem; color: #444;">ENGINE_ID: 4463972339210902</div>
+    </div>
 
     <script>
-        // --- MUSIC DATABASE (INTERAKTIVNÍ KÓD) ---
-        const songs = [
-            {id: "01", title: "Quantum Bass", artist: "NeuroLink", dur: "3:45"},
-            {id: "02", title: "Digital Rain", artist: "CyberDyne", dur: "4:12"},
-            {id: "03", title: "Silicon Soul", artist: "SynthWave", dur: "5:01"},
-            {id: "04", title: "Neural Drift", artist: "AI_Core", dur: "3:20"},
-            {id: "05", title: "Ohmic Rhythm", artist: "Volt", dur: "4:44"},
-            {id: "06", title: "Packet Loss", artist: "Glitch", dur: "2:58"}
+        // --- DATASET ---
+        const tracks = [
+            { id: "01", name: "Analog Memories", artist: "Volt-Age", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { id: "02", name: "Cyber City Night", artist: "Neon-D", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            { id: "03", name: "Neural Pulse", artist: "AI-Gen", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+            { id: "04", name: "Digital Silence", artist: "Null-Pointer", file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
         ];
 
-        // --- INICIALIZACE VIZUALIZÉRU ---
-        const viz = document.getElementById('viz');
-        for(let i=0; i<40; i++) {
-            let bar = document.createElement('div');
-            bar.className = 'bar';
-            viz.appendChild(bar);
+        // --- UI CORE ---
+        const audio = document.getElementById('audio-node');
+        const playBtn = document.getElementById('masterPlay');
+        const viz = document.getElementById('visualizer');
+        const playlist = document.getElementById('playlist');
+
+        // Generování vizualizéru (60 barů)
+        for(let i=0; i<60; i++) {
+            let b = document.createElement('div');
+            b.className = 'v-bar';
+            viz.appendChild(b);
         }
 
-        function animateViz() {
-            const bars = document.querySelectorAll('.bar');
-            bars.forEach(bar => {
-                let h = Math.random() * 95 + 5;
-                bar.style.height = h + '%';
-            });
-        }
-
-        // --- LOGIKA PŘEHRÁVAČE ---
-        const trackList = document.getElementById('tracks');
-        let playing = false;
-        let progressInterval;
-
-        songs.forEach(s => {
-            let item = document.createElement('div');
-            item.className = 'track';
-            item.innerHTML = `<div>${s.title} - ${s.artist}</div> <span>${s.dur}</span>`;
-            item.onclick = () => {
-                document.getElementById('currentTrack').innerText = s.title + ".wav";
-                resetProgress();
-                startProgress();
-            };
-            trackList.appendChild(item);
+        // Generování tabulky skladeb
+        tracks.forEach(t => {
+            let row = document.createElement('tr');
+            row.innerHTML = `<td class="num">${t.id}</td><td><strong>${t.name}</strong><br><small>${t.artist}</small></td><td>MP3/320kbps</td>`;
+            row.onclick = () => loadTrack(t);
+            playlist.appendChild(row);
         });
 
-        document.getElementById('masterPlay').onclick = function() {
-            playing = !playing;
-            this.innerText = playing ? '⏸' : '▶';
-            if(playing) {
-                progressInterval = setInterval(animateViz, 150);
-                startProgress();
-            } else {
-                clearInterval(progressInterval);
-                clearInterval(progTimer);
+        function loadTrack(t) {
+            audio.src = t.file;
+            audio.play();
+            playBtn.innerText = "⏸";
+            document.getElementById('trackInfo').innerText = `${t.name} - ${t.artist}`.toUpperCase();
+        }
+
+        playBtn.onclick = () => {
+            if(audio.paused) { audio.play(); playBtn.innerText = "⏸"; }
+            else { audio.pause(); playBtn.innerText = "▶"; }
+        };
+
+        // Vizualizační animace
+        setInterval(() => {
+            if(!audio.paused) {
+                document.querySelectorAll('.v-bar').forEach(bar => {
+                    let h = Math.random() * 100;
+                    bar.style.height = h + "%";
+                    bar.style.opacity = (h/100) + 0.1;
+                });
             }
+        }, 100);
+
+        audio.ontimeupdate = () => {
+            let pct = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('progBar').style.width = pct + "%";
         };
 
-        let prog = 0;
-        let progTimer;
-        function startProgress() {
-            clearInterval(progTimer);
-            progTimer = setInterval(() => {
-                if(prog < 100) {
-                    prog += 0.5;
-                    document.getElementById('progress').style.width = prog + '%';
-                }
-            }, 1000);
+        // Přepínání sekcí
+        function showSection(id, el) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+            document.getElementById('main-view').scrollTop = 0;
         }
 
-        function resetProgress() { prog = 0; document.getElementById('progress').style.width = '0%'; }
-
-        // --- ROUTING SYSTEM ---
-        function route(v) {
-            console.log("System Routing to: " + v);
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        window.onload = () => {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            console.log("ENGINE_READY: ca-pub-4463972339210902");
-        };
+        // AdSense
+        window.onload = () => { (adsbygoogle = window.adsbygoogle || []).push({}); };
     </script>
 </body>
 </html>
